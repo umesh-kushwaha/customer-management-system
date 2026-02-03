@@ -1,0 +1,19 @@
+.DS_Store
+.env*
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+coverage/
+
+# Gradle / Java
+.gradle/
+build/
+*.class
+*.log
+
+# IDEs
+.idea/
+.vscode/
+*.iml
