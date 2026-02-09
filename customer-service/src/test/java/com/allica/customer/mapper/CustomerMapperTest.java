@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -17,13 +18,22 @@ public class CustomerMapperTest {
     @Test
     @DisplayName("Mapper: Should map Entity to DTO correctly")
     void toDto_Success() {
-        Customer entity = new Customer(1L, "John", "Doe", LocalDate.of(1990, 1, 1));
+        Customer entity = new Customer(
+                1L,
+                "John",
+                "Doe",
+                LocalDate.of(1990, 1, 1),
+                LocalDateTime.of(2024, 1, 1, 10, 0),
+                LocalDateTime.of(2024, 1, 2, 10, 0)
+        );
 
         CustomerResponseDTO dto = mapper.toDto(entity);
 
         assertNotNull(dto);
         assertEquals("John", dto.firstName());
         assertEquals("Doe", dto.lastName());
+        assertNotNull(dto.createdAt());
+        assertNotNull(dto.updatedAt());
     }
 
     @Test

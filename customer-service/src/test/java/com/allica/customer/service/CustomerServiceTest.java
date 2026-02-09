@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -40,8 +41,22 @@ class CustomerServiceTest {
     void saveCustomer_Success() {
         // 1. Arrange (Given)
         CustomerRequestDTO inputDto = new CustomerRequestDTO("John", "Doe", LocalDate.of(1990, 1, 1));
-        Customer entity = new Customer(1L, "John", "Doe", LocalDate.of(1990, 1, 1));
-        CustomerResponseDTO responseDto = new CustomerResponseDTO(1L, "John", "Doe", LocalDate.of(1990, 1, 1));
+        Customer entity = new Customer(
+                1L,
+                "John",
+                "Doe",
+                LocalDate.of(1990, 1, 1),
+                LocalDateTime.of(2024, 1, 1, 10, 0),
+                LocalDateTime.of(2024, 1, 1, 10, 0)
+        );
+        CustomerResponseDTO responseDto = new CustomerResponseDTO(
+                1L,
+                "John",
+                "Doe",
+                LocalDate.of(1990, 1, 1),
+                LocalDateTime.of(2024, 1, 1, 10, 0),
+                LocalDateTime.of(2024, 1, 1, 10, 0)
+        );
 
         when(customerMapper.toEntity(any(CustomerRequestDTO.class))).thenReturn(entity);
         when(repository.save(any(Customer.class))).thenReturn(entity);
@@ -62,14 +77,46 @@ class CustomerServiceTest {
     @DisplayName("Should return a list of customer DTOs")
     void getAllCustomers_Success() {
         // 1. Arrange
-        Customer customer1 = new Customer(1L, "John", "Doe", LocalDate.of(1990, 1, 1));
-        Customer customer2 = new Customer(2L, "Jane", "Smith", LocalDate.of(1992, 2, 2));
+        Customer customer1 = new Customer(
+                1L,
+                "John",
+                "Doe",
+                LocalDate.of(1990, 1, 1),
+                LocalDateTime.of(2024, 1, 1, 10, 0),
+                LocalDateTime.of(2024, 1, 1, 10, 0)
+        );
+        Customer customer2 = new Customer(
+                2L,
+                "Jane",
+                "Smith",
+                LocalDate.of(1992, 2, 2),
+                LocalDateTime.of(2024, 1, 2, 10, 0),
+                LocalDateTime.of(2024, 1, 2, 10, 0)
+        );
         List<Customer> entities = Arrays.asList(customer1, customer2);
 
         when(repository.findAllByOrderByIdAsc(PageRequest.of(0, 21))).thenReturn(entities);
         // Mocking the mapper behavior for each stream iteration
-        when(customerMapper.toDto(customer1)).thenReturn(new CustomerResponseDTO(1L, "John", "Doe", LocalDate.of(1990, 1, 1)));
-        when(customerMapper.toDto(customer2)).thenReturn(new CustomerResponseDTO(2L, "Jane", "Smith", LocalDate.of(1992, 2, 2)));
+        when(customerMapper.toDto(customer1)).thenReturn(
+                new CustomerResponseDTO(
+                        1L,
+                        "John",
+                        "Doe",
+                        LocalDate.of(1990, 1, 1),
+                        LocalDateTime.of(2024, 1, 1, 10, 0),
+                        LocalDateTime.of(2024, 1, 1, 10, 0)
+                )
+        );
+        when(customerMapper.toDto(customer2)).thenReturn(
+                new CustomerResponseDTO(
+                        2L,
+                        "Jane",
+                        "Smith",
+                        LocalDate.of(1992, 2, 2),
+                        LocalDateTime.of(2024, 1, 2, 10, 0),
+                        LocalDateTime.of(2024, 1, 2, 10, 0)
+                )
+        );
 
         // 2. Act
         CustomerPageResponse result = customerService.getAllCustomers(null, null, 20, false);
@@ -156,10 +203,24 @@ class CustomerServiceTest {
     @Test
     @DisplayName("Should return customer by id")
     void getCustomerById_Success() {
-        Customer entity = new Customer(5L, "Jane", "Doe", LocalDate.of(1995, 5, 5));
+        Customer entity = new Customer(
+                5L,
+                "Jane",
+                "Doe",
+                LocalDate.of(1995, 5, 5),
+                LocalDateTime.of(2024, 1, 1, 10, 0),
+                LocalDateTime.of(2024, 1, 1, 10, 0)
+        );
         when(repository.findById(5L)).thenReturn(java.util.Optional.of(entity));
         when(customerMapper.toDto(entity)).thenReturn(
-                new com.allica.customer.dto.CustomerResponseDTO(5L, "Jane", "Doe", LocalDate.of(1995, 5, 5))
+                new com.allica.customer.dto.CustomerResponseDTO(
+                        5L,
+                        "Jane",
+                        "Doe",
+                        LocalDate.of(1995, 5, 5),
+                        LocalDateTime.of(2024, 1, 1, 10, 0),
+                        LocalDateTime.of(2024, 1, 1, 10, 0)
+                )
         );
 
         com.allica.customer.dto.CustomerResponseDTO result = customerService.getCustomerById(5L);

@@ -14,7 +14,9 @@ public class CustomerMapper {
                 entity.getId(),
                 entity.getFirstName(),
                 entity.getLastName(),
-                entity.getDateOfBirth()
+                entity.getDateOfBirth(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
         );
     }
 

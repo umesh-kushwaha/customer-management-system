@@ -36,7 +36,14 @@ public class CustomerControllerTest {
     @DisplayName("Controller: POST should return 201 Created and saved customer")
     void createCustomer_Success() throws Exception {
         CustomerRequestDTO inputDto = new CustomerRequestDTO("Jane", "Doe", LocalDate.of(1995, 5, 5));
-        CustomerResponseDTO responseDto = new CustomerResponseDTO(1L, "Jane", "Doe", LocalDate.of(1995, 5, 5));
+        CustomerResponseDTO responseDto = new CustomerResponseDTO(
+                1L,
+                "Jane",
+                "Doe",
+                LocalDate.of(1995, 5, 5),
+                java.time.LocalDateTime.of(2024, 1, 1, 10, 0),
+                java.time.LocalDateTime.of(2024, 1, 1, 10, 0)
+        );
 
         when(customerService.saveCustomer(any(CustomerRequestDTO.class))).thenReturn(responseDto);
 
@@ -47,13 +54,22 @@ public class CustomerControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.firstName").value("Jane"))
-                .andExpect(jsonPath("$.lastName").value("Doe"));
+                .andExpect(jsonPath("$.lastName").value("Doe"))
+                .andExpect(jsonPath("$.createdAt").exists())
+                .andExpect(jsonPath("$.updatedAt").exists());
     }
 
     @Test
     @DisplayName("Controller: GET should return paged customers with nextCursor")
     void getAllCustomers_Success() throws Exception {
-        CustomerResponseDTO dto = new CustomerResponseDTO(1L, "Jane", "Doe", LocalDate.of(1995, 5, 5));
+        CustomerResponseDTO dto = new CustomerResponseDTO(
+                1L,
+                "Jane",
+                "Doe",
+                LocalDate.of(1995, 5, 5),
+                java.time.LocalDateTime.of(2024, 1, 1, 10, 0),
+                java.time.LocalDateTime.of(2024, 1, 1, 10, 0)
+        );
         CustomerPageResponse response = new CustomerPageResponse(
                 List.of(dto),
                 new PageInfo(10L, 5L, 20, false, null)
@@ -73,7 +89,14 @@ public class CustomerControllerTest {
     @Test
     @DisplayName("Controller: GET by id should return customer")
     void getCustomerById_Success() throws Exception {
-        CustomerResponseDTO dto = new CustomerResponseDTO(2L, "John", "Smith", LocalDate.of(1990, 1, 1));
+        CustomerResponseDTO dto = new CustomerResponseDTO(
+                2L,
+                "John",
+                "Smith",
+                LocalDate.of(1990, 1, 1),
+                java.time.LocalDateTime.of(2024, 1, 1, 10, 0),
+                java.time.LocalDateTime.of(2024, 1, 1, 10, 0)
+        );
         when(customerService.getCustomerById(2L)).thenReturn(dto);
 
         mockMvc.perform(get("/api/customers/2"))
